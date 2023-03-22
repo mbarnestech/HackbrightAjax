@@ -4,6 +4,20 @@
 
 function showFortune(evt) {
   // TODO: get the fortune and show it in the #fortune-text div
+  // const responsePromise = fetch('/fortune')
+  // const textPromise = responsePromise.then((response) => {
+  //   const tp = response.text()
+  //   console.log(tp);
+  //   console.log(response);
+  //   return tp;
+  // });
+  // console.log(`response P: ${responsePromise}, text P: ${textPromise}`);
+  fetch('/fortune')
+  .then((response)=>response.text())
+  .then((serverData)=>{
+    document.querySelector('#fortune-text').innerHTML = serverData;
+  })
+
 }
 
 document.querySelector('#get-fortune-button').addEventListener('click', showFortune);
