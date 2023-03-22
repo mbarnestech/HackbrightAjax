@@ -29,8 +29,13 @@ function showWeather(evt) {
 
   const url = '/weather.json';
   const zipcode = document.querySelector('#zipcode-field').value;
+  const queryString = `${url}?zipcode=${zipcode}`;
 
-  // TODO: request weather with that URL and show the forecast in #weather-info
+  fetch(queryString)
+    .then((response)=>response.json())
+    .then((data)=>{
+      document.querySelector("#weather-info").innerHTML = data.forecast ;
+    });
 }
 
 document.querySelector('#weather-form').addEventListener('submit', showWeather);
@@ -40,7 +45,29 @@ document.querySelector('#weather-form').addEventListener('submit', showWeather);
 function orderMelons(evt) {
   evt.preventDefault();
 
+  const formInputs = {
+    melon_type: document.querySelector('#melon-type-field').value,
+    qty: document.querySelector('#qty-field').value,
+  };
+
+  fetch('/order-melons.json', {
+    method: 'POST',
+    body: JSON.stringify(formInputs),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response)=>response.json())
+    .then((data)=>{
+      if (data.code === 'ERROR'){
+        document.querySelector("#order-status").classList.add("order-error");
+      } else {
+        document.querySelector("#order-status").classList.remove("order-error");
+      };
+      document.querySelector("#order-status").innerHTML = data.msg;
+    });
+
   // TODO: show the result message after your form
-  // TODO: if the result code is ERROR, make it show up in red (see our CSS!)
+  // TODO: if the result code is ERROR, make it show up in red (see our CSS!) (class='order-error')
 }
 document.querySelector('#order-form').addEventListener('submit', orderMelons);
